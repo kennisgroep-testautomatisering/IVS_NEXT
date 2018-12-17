@@ -28,16 +28,16 @@ RUN mkdir /var/ini /var/logs
 
 WORKDIR /var/dumps
 
-RUN wget -q "https://raw.githubusercontent.com/kennisgroep-testautomatisering/IVS_NEXT/master/TC_01.py" -O /var/dumps/tc_01.py
+RUN wget -q "https://raw.githubusercontent.com/kennisgroep-testautomatisering/IVS_NEXT/master/TC_01.py" -O /var/dumps/TC_01.py
 
 RUN wget -q "https://raw.githubusercontent.com/kennisgroep-testautomatisering/IVS_NEXT/master/page.py" -O /var/dumps/page.py
 
-RUN wget -q "https://raw.githubusercontent.com/kennisgroep-testautomatisering/IVS_NEXT/master/uitvoering_UI_BP_1.py" -O /var/dumps/uitvoering_ui_bp_1.py
+RUN wget -q "https://raw.githubusercontent.com/kennisgroep-testautomatisering/IVS_NEXT/master/uitvoering_UI_BP_1.py" -O /var/dumps/uitvoering_UI_BP_1.py
 
-RUN wget -q "https://raw.githubusercontent.com/kennisgroep-testautomatisering/IVS_NEXT/master/voorbereiding_UI_BP_1.py" -O /var/dumps/voorbereiding_ui_bp_1.py
+RUN wget -q "https://raw.githubusercontent.com/kennisgroep-testautomatisering/IVS_NEXT/master/voorbereiding_UI_BP_1.py" -O /var/dumps/voorbereiding_UI_BP_1.py
 
 RUN wget -q "https://raw.githubusercontent.com/kennisgroep-testautomatisering/IVS_NEXT/master/init.ini" -O /var/ini/init.ini
 
 RUN ls && pwd
 
-ENTRYPOINT ["python36", "/var/dumps/tc_01.py"]
+ENTRYPOINT ["python36", "/var/dumps/TC_01.py"]
