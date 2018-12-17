@@ -16,12 +16,13 @@ from selenium.webdriver.chrome.options import Options
 class TestCase_01(unittest.TestCase):
     def setUp(self):
         self.config = configparser.ConfigParser()
-        #self.config.read("/var/ini/data.ini")
-        self.config.read("/var/ini/init.ini")
+        #self.config.read("/var/ini/init.ini")
+        self.config.read("C:/IVS_Next_KTV/ini/init.ini")
         
         logfile = datetime.datetime.today().strftime('%Y%m%d%H%M%S%f') 
             
-        logging.basicConfig(level=logging.INFO, filename = '/var/logs/'+ logfile + '.log' )
+        #logging.basicConfig(level=logging.INFO, filename = '/var/logs/'+ logfile + '.log' )
+        logging.basicConfig(level=logging.INFO, filename = '../'+ logfile + '.log' )
         logging.info("Setting up Driver")
         
         #binary = FirefoxBinary('/usr/local/firefox/firefox')
@@ -29,9 +30,11 @@ class TestCase_01(unittest.TestCase):
         chromeOptions = Options()
         chromeOptions.add_argument("--headless")
         chromeOptions.add_argument('--no-sandbox')
+        chromeOptions.add_argument("--window-size=1920,1080")
         chromeOptions.add_argument('--disable-dev-shm-usage')
         
-        self.driver = webdriver.Chrome(r"/usr/local/bin/chromedriver",chrome_options=chromeOptions)
+        #self.driver = webdriver.Chrome(r"/usr/local/bin/chromedriver",chrome_options=chromeOptions)
+        self.driver = webdriver.Chrome(r"C:/Selenium_Jar_MR/anders/chromedriver.exe",chrome_options=chromeOptions)
 
 #         ffProfile = FirefoxProfile()
 #         ffProfile.accept_untrusted_certs = True
