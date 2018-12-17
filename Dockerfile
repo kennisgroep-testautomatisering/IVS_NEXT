@@ -38,4 +38,6 @@ RUN wget -q "https://raw.githubusercontent.com/kennisgroep-testautomatisering/IV
 
 RUN wget -q "https://raw.githubusercontent.com/kennisgroep-testautomatisering/IVS_NEXT/master/init.ini" -O /var/ini/init.ini
 
+LS
+
 ENTRYPOINT ["python36", "/var/dumps/TC_01.py"]
