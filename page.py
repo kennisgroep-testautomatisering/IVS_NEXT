@@ -20,7 +20,7 @@ class MainPage(BasePage):
         elem = wait.until(EC.presence_of_element_located(locator_login))
         elem.click()
         locator_username = (By.CSS_SELECTOR, ".text[name='user.name']")
-        elem = wait.until(EC.presence_of_element_located(locator_username))
+        elem = wait.until(EC.element_to_be_clickable(locator_username))
         elem.send_keys(username)
         locator_password = (By.CSS_SELECTOR, ".text[type='password']")
         elem = wait.until(EC.presence_of_element_located(locator_password))
