@@ -1,6 +1,6 @@
 version: '3'
 services:
-  ivs_regressie:
+  ivs_regressie_tc_01:
     build: .
     volumes:
       - ../ini:/var/ini:z
