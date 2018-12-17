@@ -2,6 +2,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 import logging
+import time
 
 class BasePage(object):
     """Base class to initialize the base page that will be called from all pages"""
@@ -36,5 +37,7 @@ class MainPage(BasePage):
         elem = wait.until(EC.presence_of_element_located(locator_person))
         elem.click()
         locator_logout = (By.CSS_SELECTOR,".dropdown-menu-right #logout-button")
-        elem = wait.until(EC.presence_of_element_located(locator_logout))
+        elem = wait.until(EC.element_to_be_clickable(locator_logout))
+        time.sleep(5)
+        #elem = wait.until(EC.presence_of_element_located(locator_logout))
         elem.click()

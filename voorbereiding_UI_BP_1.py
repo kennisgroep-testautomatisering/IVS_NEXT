@@ -55,7 +55,7 @@ class IVSPage(BasePage):
             locator_menu = (By.CSS_SELECTOR, '[aria-labelledby="vaarreisSegment-status"]')
             elem = wait.until(EC.presence_of_element_located(locator_menu))
             options = []
-            options = elem.find_elements_by_css_selector('ng-star-inserted')
+            options = elem.find_elements_by_css_selector('.ng-star-inserted')
             for option in options:
                 print (option.text)
                 if(option.text == 'Actueel'): 
