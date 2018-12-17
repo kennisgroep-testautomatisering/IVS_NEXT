@@ -8,6 +8,7 @@ import uitvoering_UI_BP_1
 
 
 from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
 #from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 #from selenium.webdriver.firefox.webdriver import FirefoxProfile
 
@@ -16,18 +17,21 @@ class TestCase_01(unittest.TestCase):
     def setUp(self):
         self.config = configparser.ConfigParser()
         #self.config.read("/var/ini/data.ini")
-        self.config.read("C:\IVS_Next_KTV\ini\init.ini")
+        self.config.read("/var/ini/init.ini")
         
-        logfile = datetime.datetime.today().strftime('%Y%m%d%H%M%S%f')     
-        logging.basicConfig(level=logging.INFO, filename = '../logs'+ logfile + '.log' )
+        logfile = datetime.datetime.today().strftime('%Y%m%d%H%M%S%f') 
+            
+        logging.basicConfig(level=logging.INFO, filename = '/var/logs/'+ logfile + '.log' )
         logging.info("Setting up Driver")
         
         #binary = FirefoxBinary('/usr/local/firefox/firefox')
         
-        chromeOptions = webdriver.ChromeOptions()
-        #chromeOptions.add_argument("headless")
-        chromeOptions.add_experimental_option("detach", True)
-        self.driver = webdriver.Chrome(options=chromeOptions)
+        chromeOptions = Options()
+        chromeOptions.add_argument("--headless")
+        chromeOptions.add_argument('--no-sandbox')
+        chromeOptions.add_argument('--disable-dev-shm-usage')
+        
+        self.driver = webdriver.Chrome(r"/usr/local/bin/chromedriver",chrome_options=chromeOptions)
 
 #         ffProfile = FirefoxProfile()
 #         ffProfile.accept_untrusted_certs = True
