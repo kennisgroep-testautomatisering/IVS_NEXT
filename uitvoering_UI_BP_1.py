@@ -45,8 +45,8 @@ class uitvoering_UI_BP_1(BasePage):
                 dest_width = brugplanning_rechts.size['width']/2
                 xoffset = brugplanning_rechts.location['x'] + dest_height
                 yoffset = brugplanning_rechts.location['y'] + dest_width
-                print(xoffset)
-                print(yoffset)
+                #print(xoffset)
+                #print(yoffset)
                 #ActionChains(driver).click_and_hold(boot).move_to_element(brugplanning_rechts).release(brugplanning_rechts).perform()
                 #ActionChains(driver).drag_and_drop(boot, brugplanning_rechts).perform()
                 #ActionChains(driver).drag_and_drop_by_offset(boot, xoffset, yoffset)

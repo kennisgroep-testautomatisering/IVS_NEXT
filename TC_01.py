@@ -5,6 +5,7 @@ import configparser
 import page
 import voorbereiding_UI_BP_1
 import uitvoering_UI_BP_1
+import os
 
 
 from selenium import webdriver
@@ -19,10 +20,9 @@ class TestCase_01(unittest.TestCase):
         self.config.read("/var/ini/init.ini")
         #self.config.read("C:/IVS_Next_KTV/ini/init.ini")
         
-        logfile = datetime.datetime.today().strftime('%Y%m%d%H%M%S%f') 
-            
-        logging.basicConfig(level=logging.INFO, filename = '/var/logs/'+ logfile + '.log' )
-        #logging.basicConfig(level=logging.INFO, filename = '../'+ logfile + '.log' )
+        
+        logfile = os.environ["logfile"] 
+        logging.basicConfig(level=logging.INFO, filename = '../logs/'+ logfile)
         logging.info("Setting up Driver")
         
         #binary = FirefoxBinary('/usr/local/firefox/firefox')
@@ -81,4 +81,17 @@ class TestCase_01(unittest.TestCase):
         
 
 if __name__ == '__main__':
-    unittest.main()
+    logfile = datetime.datetime.today().strftime('%Y%m%d%H%M%S%f') +'.log'
+    os.environ["logfile"] = logfile
+    log_file = 'log_file.txt'
+    f = open(log_file, "a")
+    runner = unittest.TextTestRunner(f)
+    unittest.main(testRunner=runner,exit=False)
+    f.close()
+    f = open(log_file, "r")
+    file = open('../logs/'+logfile, "a")
+    file.write('\n')
+    file.write (f.read())
+    file.close()
+    f.close()
+    os.remove(log_file)

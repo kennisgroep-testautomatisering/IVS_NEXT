@@ -57,13 +57,15 @@ class IVSPage(BasePage):
             options = []
             options = elem.find_elements_by_css_selector('.ng-star-inserted')
             for option in options:
-                print (option.text)
+                #print (option.text)
                 if(option.text == 'Actueel'): 
                     option.click()
                     locator_publiceer = (By.CSS_SELECTOR,'#publiceer-reis-button')
                     elem = wait.until(EC.presence_of_element_located(locator_publiceer))
                     logging.info("De nieuwe status wordt gepubliceerd")
                     elem.click()
+                    #Hier krijgen we meuk
+                    
                     break
            
         locator_positie = (By.CSS_SELECTOR,'#invoeren-positie')
