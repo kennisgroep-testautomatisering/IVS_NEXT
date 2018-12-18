@@ -153,12 +153,12 @@ class uitvoering_UI_BP_1(BasePage):
         WAIT = 30
         wait = WebDriverWait(self.driver, WAIT)
         locator_brugplanning = (By.CSS_SELECTOR,".btn-openen")
-        elem = wait.until(EC.presence_of_element_located(locator_brugplanning))
+        elem = wait.until(EC.element_to_be_clickable(locator_brugplanning))
         elem.click()
         logging.info("Het stoplicht staat op groen")
         
         locator_brugplanning = (By.CSS_SELECTOR,".btn-sluiten")
-        elem = wait.until(EC.presence_of_element_located(locator_brugplanning))
+        elem = wait.until(EC.element_to_be_clickable(locator_brugplanning))
         elem.click()
         logging.info("Het stoplicht staat op rood")
         
