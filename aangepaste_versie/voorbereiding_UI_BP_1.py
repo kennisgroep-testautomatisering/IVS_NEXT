@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 import logging
 import re
 
@@ -12,19 +13,19 @@ class BasePage(object):
         self.driver = driver
         
 class IVSPage(BasePage):
-    def navigate(self):
+    def navigate(self, brug):
         WAIT = 30
         wait = WebDriverWait(self.driver, WAIT)
-        logging.info("Going to Sas van Gent Brug")
-        locator_login = (By.LINK_TEXT, "Sas van Gent, brug")
+        logging.info("Going to "+brug)
+        locator_login = (By.LINK_TEXT, brug)
         elem = wait.until(EC.presence_of_element_located(locator_login))
         elem.click()
         
-    def voorbereiding_brugplanning(self, boot, eni_nummer):
+    def voorbereiding_brugplanning(self, boot, eni_nummer, vaarrichting):
         WAIT = 30
         wait = WebDriverWait(self.driver, WAIT)
         driver = self.driver
-        logging.info("Zoek boot KTV-KAT03")
+        logging.info("Zoek boot "+boot)
         locator_zoeken = (By.CSS_SELECTOR, "#vaartuig-search-input")
         elem = wait.until(EC.presence_of_element_located(locator_zoeken))
         elem.send_keys(boot)
@@ -71,21 +72,28 @@ class IVSPage(BasePage):
         locator_positie = (By.CSS_SELECTOR,'#invoeren-positie')
         elem = wait.until(EC.presence_of_element_located(locator_positie))
         logging.info("De positie van de boot veranderen")
+        action=ActionChains(driver)
+        action.move_to_element(elem).perform()
         elem.click() 
         locator_submenu = (By.CSS_SELECTOR,"[aria-labelledby='vaarreis-muteren-positie-vaarrichting']")
         elem = wait.until(EC.presence_of_element_located(locator_submenu))
-        locator_afvarend = (By.CSS_SELECTOR,'.dropdown-item[translate="VTS_GEBIEDSLIJST.AFVAREND"]')
-        elem = wait.until(EC.presence_of_element_located(locator_afvarend)) 
-        elem.click()
+        
+        if (vaarrichting == 'afvarend'):
+            locator_afvarend = (By.CSS_SELECTOR,'.dropdown-item[translate="VTS_GEBIEDSLIJST.AFVAREND"]')
+            elem = wait.until(EC.presence_of_element_located(locator_afvarend)) 
+            elem.click()
+        elif (vaarrichting == 'opvarend'):
+            locator_opvarend = (By.CSS_SELECTOR,'.dropdown-item[translate="VTS_GEBIEDSLIJST.OPVAREND"]')
+            elem = wait.until(EC.presence_of_element_located(locator_opvarend)) 
+            elem.click()
+            
         locator_publiceren = (By.CSS_SELECTOR,'.justify-content-between')
         elem = wait.until(EC.presence_of_element_located(locator_publiceren))
         elem.click()
         locator_kruisje = (By.CSS_SELECTOR,".btn-delete[container='body']")
         elem = wait.until(EC.presence_of_element_located(locator_kruisje))
         elem.click()
-        locator_window_title = (By.CSS_SELECTOR, '.text-uppercase[translate="BRUGPLANNING.TITLE"]')
-        elem = wait.until(EC.presence_of_element_located(locator_window_title))
-        locator_ververs = (By.CSS_SELECTOR,'.sector-click-to-refresh')
+        locator_ververs = (By.CSS_SELECTOR,'.navbar-dark #sector-refresh-btn')
         logging.info("Hoofdscherm verversen")
         elem = wait.until(EC.presence_of_element_located(locator_ververs))
         elem.click()

@@ -1,6 +1,7 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 import logging
 import time
 
@@ -14,11 +15,14 @@ class BasePage(object):
 class MainPage(BasePage):
     def login(self, username, password):
         WAIT = 30
+        driver = self.driver
         wait = WebDriverWait(self.driver, WAIT)
         logging.info("Going to login")
         locator_login = (By.CSS_SELECTOR, "#login-button")
         elem = wait.until(EC.presence_of_element_located(locator_login))
         #elem = wait.until(EC.element_to_be_clickable(locator_login))
+        action=ActionChains(driver)
+        action.move_to_element(elem).perform()
         elem.click()
         locator_username = (By.CSS_SELECTOR, ".text[name='user.name']")
         elem = wait.until(EC.element_to_be_clickable(locator_username))
