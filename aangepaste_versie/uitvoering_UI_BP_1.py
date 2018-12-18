@@ -19,12 +19,16 @@ class uitvoering_UI_BP_1(BasePage):
         locator_tab_rechts = (By.CSS_SELECTOR,'#tabs-rechts')
         elem = wait.until(EC.presence_of_element_located(locator_tab_rechts))
         juiste_boot = False
-        boten = []
-        boten = elem.find_elements_by_css_selector('.vaartuig-identifier')
-        for boot in boten:
-            if (boot.text==eni_nummer) :
-                juiste_boot = True
+        for i in range(30):
+            boten = []
+            boten = elem.find_elements_by_css_selector('.vaartuig-identifier')
+            for boot in boten:
+                if (boot.text==eni_nummer) :
+                    juiste_boot = True
+                    break
+            if(juiste_boot):
                 break
+            time.sleep(0.1)
         
         if (juiste_boot):
             logging.info("De juiste boot is gevonden")
@@ -55,85 +59,94 @@ class uitvoering_UI_BP_1(BasePage):
                 e2 = brugplanning_rechts
                 driver.execute_script(JS_HTML5_DND, e1, e2)
                 logging.info("De boot is gesleept")
-                break        
+                break
             
     def check(self,boot_naam,eni_nummer):
         WAIT = 30
         wait = WebDriverWait(self.driver, WAIT)
         driver = self.driver
+        
+        #Check: schip staat in de lijst ingedeeld 
         locator_ingedeeld = (By.CSS_SELECTOR, "#tabs-rechts .tab-header-ingedeeld .nav-link")
         elem = wait.until(EC.presence_of_element_located(locator_ingedeeld))
         elem.click()
         locator_tab_rechts = (By.CSS_SELECTOR,'#tabs-rechts')
         elem = wait.until(EC.presence_of_element_located(locator_tab_rechts))
         juiste_boot = False
-        time.sleep(3)
-        boten = []
-        boten = elem.find_elements_by_css_selector('.vaartuig-card')
-        if (len(boten)>0):
-            for boot in boten:
-                identifier = boot.find_element_by_css_selector('.vaartuig-identifier')
-                if (identifier.text==eni_nummer):
-                    juiste_boot = True
-                    break
-            
+        
+        for i in range(30):
+            boten = []
+            boten = elem.find_elements_by_css_selector('.vaartuig-card')
+            if (len(boten)>0):
+                for boot in boten:
+                    identifier = boot.find_element_by_css_selector('.vaartuig-identifier')
+                    if (identifier.text==eni_nummer):
+                        juiste_boot = True
+                        break
             if (juiste_boot):
-                logging.info("De juiste boot is ingedeeld")
-            elif(not juiste_boot):
-                logging.info("De juiste boot is NIET ingedeeld")
-                sys.exit(1)
-        else:
-            logging.info("Er zijn helemaal geen boten ingedeeld")
-            sys.exit(1)
+                break
+            time.sleep(0.1)    
             
-        locator_ingedeeld = (By.CSS_SELECTOR, "#tabs-rechts .tab-header-aanbod .nav-link")
-        elem = wait.until(EC.presence_of_element_located(locator_ingedeeld))
+        if (juiste_boot):
+            logging.info("De juiste boot is ingedeeld")
+        elif(not juiste_boot):
+            logging.info("De juiste boot is NIET ingedeeld")
+            sys.exit(1)
+        
+         
+        #Check: schip staat niet meer op de aanbodslijst 
+        locator_aanbod = (By.CSS_SELECTOR, "#tabs-rechts .tab-header-aanbod .nav-link")
+        elem = wait.until(EC.presence_of_element_located(locator_aanbod))
         elem.click()
         
         locator_tab_rechts = (By.CSS_SELECTOR,'#tabs-rechts')
         elem = wait.until(EC.presence_of_element_located(locator_tab_rechts))
         juiste_boot = False
-        boten = []
-        boten = elem.find_elements_by_css_selector('.vaartuig-card')
-        if (len(boten)>0):
-            for boot in boten:
-                identifier = boot.find_element_by_css_selector('.vaartuig-identifier')
-                if (identifier.text==eni_nummer):
-                    juiste_boot = True
-                    break
+
+        for i in range(30):
+            boten = []
+            boten = elem.find_elements_by_css_selector('.vaartuig-card')
+            if (len(boten)>0):
+                for boot in boten:
+                    identifier = boot.find_element_by_css_selector('.vaartuig-identifier')
+                    if (identifier.text==eni_nummer):
+                        juiste_boot = True
+                        break
+            if(not juiste_boot):
+                break
+            time.sleep(0.1)
             
-            if (juiste_boot):
-                logging.info("De boot staat in de aanbodlijst")
-                sys.exit(1)
-            elif(not juiste_boot):
-                logging.info("De boot staat NIET in de aanbodlijst")
-                
-        else:
-            logging.info("De boot staat niet in de aanbodlijst")
-            
+        if (juiste_boot):
+            logging.info("De boot staat in de aanbodlijst")
+            sys.exit(1)
+        elif(not juiste_boot):
+            logging.info("De boot staat NIET in de aanbodlijst")                
+
+        
+        #Check: schip staat in de brugplanning 
         locator_planning_window = (By.CSS_SELECTOR,'.actuele-planning#brugplanning-0')
         planning = wait.until(EC.presence_of_element_located(locator_planning_window))
         brugplanning_rechts = driver.find_element_by_css_selector(".actuele-planning#brugplanning-0 .brugplanning-rechts .vaartuigen")
         juiste_boot = False
-        time.sleep(3)
-        boten = []
-        boten = brugplanning_rechts.find_elements_by_css_selector('.vaartuig-card')
-        if (len(boten)>0):
-            for boot in boten:
-                identifier = boot.find_element_by_css_selector('.vaartuig-naam .text-truncate')
-                if (identifier.text==boot_naam):
-                    juiste_boot = True
-                    break
+        
+        for i in range(30):
+            boten = []
+            boten = brugplanning_rechts.find_elements_by_css_selector('.vaartuig-card')
+            if (len(boten)>0):
+                for boot in boten:
+                    identifier = boot.find_element_by_css_selector('.vaartuig-naam .text-truncate')
+                    if (identifier.text==boot_naam):
+                        juiste_boot = True
+                        break
+            if(juiste_boot):
+                break
+            time.sleep(0.1)
             
-            if (juiste_boot):
-                logging.info("De boot staat in de brugplanning")
+        if (juiste_boot):
+            logging.info("De boot staat in de brugplanning")
 
-            elif(not juiste_boot):
-                logging.info("De boot staat NIET in de brugplanning")
-                sys.exit(1)
-
-        else:
-            logging.info("Er staan geen boten in de brugplanning")
+        elif(not juiste_boot):
+            logging.info("De boot staat NIET in de brugplanning")
             sys.exit(1)
         
     def uitvoeren_brugplanning(self,boot_naam,eni_nummer):
@@ -154,47 +167,52 @@ class uitvoering_UI_BP_1(BasePage):
         elem.click()
         logging.info("Brugplanning gerealiseerd")
         
+        #Check: Schip staat weer in de aanbodlijst (rechts)
         locator_tab_rechts = (By.CSS_SELECTOR,'#tabs-rechts')
         elem = wait.until(EC.presence_of_element_located(locator_tab_rechts))
         juiste_boot = False
-        boten = []
-        boten = elem.find_elements_by_css_selector('.vaartuig-card')
-        if (len(boten)>0):
-            for boot in boten:
-                identifier = boot.find_element_by_css_selector('.vaartuig-identifier')
-                if (identifier.text==eni_nummer):
-                    juiste_boot = True
-                    break
+        for i in range(30):
+            boten = []
+            boten = elem.find_elements_by_css_selector('.vaartuig-card')
+            if (len(boten)>0):
+                for boot in boten:
+                    identifier = boot.find_element_by_css_selector('.vaartuig-identifier')
+                    if (identifier.text==eni_nummer):
+                        juiste_boot = True
+                        break
+            if(juiste_boot):
+                break
+            time.sleep(0.1)
             
-            if (juiste_boot):
-                logging.info("De boot staat in de aanbodlijst")
-                
-            elif(not juiste_boot):
-                logging.info("De boot staat NIET in de aanbodlijst")
-                raise ValueError('Boot NIET gevonden')
-        else:
-            logging.info("Er staan GEEN boten in de aanbodlijst")
-            raise ValueError('GEEN boten gevonden')
+            
+        if (juiste_boot):
+            logging.info("De boot staat in de aanbodlijst")
+            
+        elif(not juiste_boot):
+            logging.info("De boot staat NIET in de aanbodlijst")
+            raise ValueError('Boot NIET gevonden')
         
+        #Check: Brugplanning is verdwenen 
         locator_planning_window = (By.CSS_SELECTOR,'.actuele-planning#brugplanning-0')
         planning = wait.until(EC.presence_of_element_located(locator_planning_window))
         brugplanning_rechts = planning.find_element_by_css_selector(".brugplanning-rechts .vaartuigen")
         juiste_boot = False
-        boten = []
-        boten = brugplanning_rechts.find_elements_by_css_selector('.vaartuig-card')
-        if (len(boten)>0):
-            for boot in boten:
-                identifier = boot.find_element_by_css_selector('.vaartuig-card .vaartuig-naam .text-truncate')
-                if (identifier.text==boot_naam):
-                    juiste_boot = True
-                    break
+        for i in range(30):
+            boten = []
+            boten = brugplanning_rechts.find_elements_by_css_selector('.vaartuig-card')
+            if (len(boten)>0):
+                for boot in boten:
+                    identifier = boot.find_element_by_css_selector('.vaartuig-card .vaartuig-naam .text-truncate')
+                    if (identifier.text==boot_naam):
+                        juiste_boot = True
+                        break
+            if(not juiste_boot):
+                break
+            time.sleep(0.1)
             
-            if (juiste_boot):
-                logging.info("De boot staat in de brugplanning")
-                raise ValueError('Boot staat nog in brugplanning')
+        if (juiste_boot):
+            logging.info("De boot staat in de brugplanning")
+            raise ValueError('Boot staat nog in brugplanning')
 
-            elif(not juiste_boot):
-                logging.info("De boot staat NIET in de brugplanning")
-
-        else:
-            logging.info("Er staan geen boten in de brugplanning")
+        elif(not juiste_boot):
+            logging.info("De boot staat NIET in de brugplanning")
