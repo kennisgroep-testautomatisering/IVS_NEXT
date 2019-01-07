@@ -35,6 +35,7 @@ class TestCase_01(unittest.TestCase):
         
         chromeOptions = Options()
         if platform.system()=="Linux": 
+            logging.info("Kijk mam, zonder hoofd")
             chromeOptions.add_argument("--headless")
         chromeOptions.add_argument('--no-sandbox')
         chromeOptions.add_argument("--window-size=1920,1080")
