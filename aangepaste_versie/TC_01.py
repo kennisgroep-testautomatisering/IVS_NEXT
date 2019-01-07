@@ -6,6 +6,7 @@ import page
 import voorbereiding_UI_BP_1
 import uitvoering_UI_BP_1
 import os
+import platform
 
 
 from selenium import webdriver
@@ -16,30 +17,44 @@ from selenium.webdriver.chrome.options import Options
 
 class TestCase_01(unittest.TestCase):
     def setUp(self):
-        self.config = configparser.ConfigParser()
-        self.config.read("/var/ini/init.ini")
-        #self.config.read("C:/IVS_Next_KTV/ini/init.ini")
         
+        #Ook nog uitzoeken hoe ik het beste listeners kan inbouwen.
+        #Specifiek on_exception en dan iets maken dat screenshots maakt als er een exception optreed.
+         
+        #print(platform.system())
+        self.config = configparser.ConfigParser()
+        
+        if platform.system()=="Windows": 
+            self.config.read("C:/IVS_Next_KTV/ini/init.ini")
+        elif platform.system()=="Linux":
+            self.config.read("/var/ini/init.ini")
         
         logfile = os.environ["logfile"] 
         logging.basicConfig(level=logging.INFO, filename = '../logs/'+ logfile)
         logging.info("Setting up Driver")
         
         chromeOptions = Options()
-        chromeOptions.add_argument("--headless")
+        if platform.system()=="Linux": 
+            chromeOptions.add_argument("--headless")
         chromeOptions.add_argument('--no-sandbox')
         chromeOptions.add_argument("--window-size=1920,1080")
         #chromeOptions.add_argument("--window-size=1366,768")
         chromeOptions.add_argument('--disable-dev-shm-usage')
         
-        self.driver = webdriver.Chrome(r"/usr/local/bin/chromedriver",chrome_options=chromeOptions)
-        #self.driver = webdriver.Chrome(r"C:/Selenium_Jar_MR/anders/chromedriver.exe",chrome_options=chromeOptions)
+        if platform.system()=="Windows":
+            self.driver = webdriver.Chrome(r"C:/Selenium_Jar_MR/anders/chromedriver.exe",chrome_options=chromeOptions) 
+        elif platform.system()=="Linux":
+            self.driver = webdriver.Chrome(r"/usr/local/bin/chromedriver",chrome_options=chromeOptions)
+        
 
         logging.info("Setting Driver Settings")
-        self.driver.maximize_window()
+        #self.driver.maximize_window()
         link = "https://acceptatie2.vos.intranet.rijkswaterstaat.nl/ivs-gui-frontend/#/mededelingen"
         driver = self.driver
         driver.get(link)
+        self.addCleanup(self.driver.quit)
+        self.addCleanup(self.screen_shot)
+        self.driver.implicitly_wait(5)
     
     def voorbereiding_start(self):
         main_page = page.MainPage(self.driver)
@@ -72,6 +87,12 @@ class TestCase_01(unittest.TestCase):
     def test_uc01(self):
         self.voorbereiding_start()
         self.uitvoering_start()
+        
+    def screen_shot(self):
+        """Take a Screen-shot of the drive homepage, when it Failed."""
+        for method, error in self._outcome.errors:
+            if error:
+                self.driver.get_screenshot_as_file("../logs/screenshot_error"+datetime.datetime.today().strftime('%Y%m%d%H%M%S%f')+".png")
         
     def tearDown(self):
         #self.driver.close()

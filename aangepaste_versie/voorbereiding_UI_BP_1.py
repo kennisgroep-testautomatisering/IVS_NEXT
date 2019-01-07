@@ -79,6 +79,7 @@ class IVSPage(BasePage):
         elem = wait.until(EC.presence_of_element_located(locator_submenu))
         
         if (vaarrichting == 'afvarend'):
+            logging.info("Selecteer afvarend")
             locator_afvarend = (By.CSS_SELECTOR,'.dropdown-item[translate="VTS_GEBIEDSLIJST.AFVAREND"]')
             elem = wait.until(EC.presence_of_element_located(locator_afvarend)) 
             elem.click()
