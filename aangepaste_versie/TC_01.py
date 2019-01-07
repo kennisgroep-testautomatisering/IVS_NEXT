@@ -35,11 +35,9 @@ class TestCase_01(unittest.TestCase):
         
         chromeOptions = Options()
         if platform.system()=="Linux": 
-            logging.info("Kijk mam, zonder hoofd")
             chromeOptions.add_argument("--headless")
         chromeOptions.add_argument('--no-sandbox')
         chromeOptions.add_argument("--window-size=1920,1080")
-        #chromeOptions.add_argument("--window-size=1366,768")
         chromeOptions.add_argument('--disable-dev-shm-usage')
         
         if platform.system()=="Windows":
@@ -49,7 +47,6 @@ class TestCase_01(unittest.TestCase):
         
 
         logging.info("Setting Driver Settings")
-        #self.driver.maximize_window()
         link = "https://acceptatie2.vos.intranet.rijkswaterstaat.nl/ivs-gui-frontend/#/mededelingen"
         driver = self.driver
         driver.get(link)
@@ -58,6 +55,18 @@ class TestCase_01(unittest.TestCase):
         self.driver.implicitly_wait(5)
     
     def voorbereiding_start(self):
+        '''
+        Ga naar de 'Sas van Gent brug'
+        Zoek het schip  KTV-KAT03 op in de zoekfunctie 
+        Selecteer het schip 
+        Check of de status op actueel staat
+        Wanneer status op beeindigd staat, zet de status op actueel en klik op publiceer reis
+        Klik op het icoon (potloodje) om huidige positie te wijzigen 
+        Selecteer afvarend 
+        Selecteer publiceer positie 
+        Klik op het kruisje om de vaartuig detailbrowser af te sluiten 
+        Druk op refresh rechtsonder in beeld (GUI)
+        '''
         main_page = page.MainPage(self.driver)
         data_algemeen = self.config['INITdata_algemeen']
         data_specifiek = self.config['INITdata_BP_UI_01']
@@ -73,6 +82,23 @@ class TestCase_01(unittest.TestCase):
         ivs_page.voorbereiding_brugplanning(boot,eni_nummer,vaarrichting )
         
     def uitvoering_start(self):
+        '''
+        Check of schip KTV-KAT03 in de aanbodlijst staat van de brug (rechts)
+        Klik op het plusje op een nieuwe brugplanning aan te maken
+        Klik op schip KTV-KAT03 en sleep dit schip naar de brugplanning (rechterhelft)
+        Ga naar ingedeeld (zelfde kant als schip is ingedeeld in de brugplanning (rechts)
+        Check: schip staat in de lijst ingedeeld 
+        Klik op aanbod (rechterkant)
+        Check: schip staat niet meer op de aanbodslijst 
+        Check: schip staat in de brugplanning 
+        Druk op het witte rondje om het stoplicht op groen te zetten 
+        Druk op het witte rondje om het stoplicht op rood te zetten 
+        Selecteer 'ja'om de brugplaning te realiseren
+        Check: Schip staat weer in de aanbodlijst (rechts)
+        Check: Brugplanning is verdwenen 
+        Klik op (naam account bv Bert Pril )
+        Selecteer uitloggen 
+        '''
         data_specifiek = self.config['INITdata_BP_UI_01']
         boot = data_specifiek['test_boot']
         eni_nummer = data_specifiek['eni_nummer']
@@ -90,8 +116,10 @@ class TestCase_01(unittest.TestCase):
         self.uitvoering_start()
         
     def screen_shot(self):
-        """Take a Screen-shot of the drive homepage, when it Failed."""
-        for method, error in self._outcome.errors:
+        """
+        In geval van error: Maak screenshot
+        """
+        for error in self._outcome.errors:
             if error:
                 self.driver.get_screenshot_as_file("../logs/screenshot_error"+datetime.datetime.today().strftime('%Y%m%d%H%M%S%f')+".png")
         

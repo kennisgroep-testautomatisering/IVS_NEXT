@@ -25,6 +25,16 @@ class IVSPage(BasePage):
         WAIT = 30
         wait = WebDriverWait(self.driver, WAIT)
         driver = self.driver
+        #Brugplanningen opschonen
+        planningen = driver.find_elements_by_css_selector('.delete-brugplanning-btn')
+        for planning in planningen:
+            planning.click()
+            bevestig = driver.find_element_by_css_selector("#btn-do-delete")
+            bevestig.click()
+        
+        toevoegen = driver.find_element_by_css_selector(".add-button .fa-plus")
+        toevoegen.click()
+        
         logging.info("Zoek boot "+boot)
         locator_zoeken = (By.CSS_SELECTOR, "#vaartuig-search-input")
         elem = wait.until(EC.presence_of_element_located(locator_zoeken))
