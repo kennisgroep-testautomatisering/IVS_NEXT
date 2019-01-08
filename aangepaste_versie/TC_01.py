@@ -7,6 +7,7 @@ import voorbereiding_UI_BP_1
 import uitvoering_UI_BP_1
 import os
 import platform
+import sys
 
 
 from selenium import webdriver
@@ -14,23 +15,43 @@ from selenium.webdriver.chrome.options import Options
 #from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 #from selenium.webdriver.firefox.webdriver import FirefoxProfile
 
+class Log(object):
+    def __init__(self):
+        self.orgstdout = sys.stdout
+        self.log = open("log.txt", "a")
+
+    def write(self, msg):
+        self.orgstdout.write(msg)
+        self.log.write(msg)  
+
 
 class TestCase_01(unittest.TestCase):
+    
+
+    
     def setUp(self):
-        
-        #Ook nog uitzoeken hoe ik het beste listeners kan inbouwen.
-        #Specifiek on_exception en dan iets maken dat screenshots maakt als er een exception optreed.
-         
+        #sys.stdout = Log()
         #print(platform.system())
+        
         self.config = configparser.ConfigParser()
+        logfile = os.environ["file_log"]
+        path_to_log = os.environ["log_path"]
+        path_to_ini = os.environ["ini_path"]
         
-        if platform.system()=="Windows": 
-            self.config.read("C:/IVS_Next_KTV/ini/init.ini")
-        elif platform.system()=="Linux":
-            self.config.read("/var/ini/init.ini")
+        self.config.read(path_to_ini+"init.ini")
         
-        logfile = os.environ["logfile"] 
-        logging.basicConfig(level=logging.INFO, filename = '../logs/'+ logfile)
+        logging.basicConfig(level=logging.INFO, filename=path_to_log+logfile, format='%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+        
+#         root = logging.getLogger()
+#         root.setLevel(logging.INFO)
+#         
+#         handler = logging.StreamHandler(sys.stdout)
+#         handler.setLevel(logging.DEBUG)
+#         formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+#         handler.setFormatter(formatter)
+#         root.addHandler(handler)
+        
+        
         logging.info("Setting up Driver")
         
         chromeOptions = Options()
@@ -118,10 +139,13 @@ class TestCase_01(unittest.TestCase):
     def screen_shot(self):
         """
         In geval van error: Maak screenshot
+        
         """
+        path_to_log = os.environ["log_path"]
         for error in self._outcome.errors:
-            if error:
-                self.driver.get_screenshot_as_file("../logs/screenshot_error"+datetime.datetime.today().strftime('%Y%m%d%H%M%S%f')+".png")
+            if error[1]:
+                self.driver.get_screenshot_as_file(path_to_log+"screenshot_error"+datetime.datetime.today().strftime('%Y%m%d%H%M%S%f')+".png")
+                
         
     def tearDown(self):
         #self.driver.close()
@@ -129,17 +153,32 @@ class TestCase_01(unittest.TestCase):
         
 
 if __name__ == '__main__':
+    if platform.system()=="Windows": 
+        if not (os.path.exists("./logs")):
+            os.mkdir("./logs")
+        path_to_log = "./logs/"
+        path_to_ini = "./ini/"
+    elif platform.system()=="Linux":
+        path_to_log = "../logs/"
+        path_to_ini = "/var/ini/"
+    
+    os.environ["log_path"] = path_to_log
+    os.environ["ini_path"] = path_to_ini
+    
+    #sys.stderr = Log()
     logfile = datetime.datetime.today().strftime('%Y%m%d%H%M%S%f') +'.log'
-    os.environ["logfile"] = logfile
+    os.environ["file_log"] = logfile
     log_file = 'log_file.txt'
     f = open(log_file, "a")
+    #@unittest.main()
     runner = unittest.TextTestRunner(f)
     unittest.main(testRunner=runner,exit=False)
     f.close()
     f = open(log_file, "r")
-    file = open('../logs/'+logfile, "a")
+    file = open(path_to_log+logfile, "a")
     file.write('\n')
     file.write (f.read())
     file.close()
     f.close()
     os.remove(log_file)
+
