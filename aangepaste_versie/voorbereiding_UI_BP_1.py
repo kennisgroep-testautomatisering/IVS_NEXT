@@ -20,6 +20,7 @@ class IVSPage(BasePage):
         logging.info("Going to "+brug)
         locator_login = (By.LINK_TEXT, brug)
         elem = wait.until(EC.presence_of_element_located(locator_login))
+        elem = wait.until(EC.element_to_be_clickable(locator_login))
         elem.click()
         
     def voorbereiding_brugplanning(self, boot, eni_nummer, vaarrichting):
