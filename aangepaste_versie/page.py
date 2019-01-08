@@ -4,6 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 import logging
 import time
+import os
 
 class BasePage(object):
     """Base class to initialize the base page that will be called from all pages"""
@@ -14,7 +15,9 @@ class BasePage(object):
 
 class MainPage(BasePage):
     def login(self, username, password):
-        WAIT = 30
+        WAIT = int(os.environ["web_wait"])
+        
+        #WAIT = 30
         driver = self.driver
         wait = WebDriverWait(self.driver, WAIT)
         logging.info("Going to login")
@@ -35,7 +38,8 @@ class MainPage(BasePage):
         elem.click()
         
     def logout(self):
-        WAIT = 30
+        WAIT = int(os.environ["web_wait"])
+        #WAIT = 30
         wait = WebDriverWait(self.driver, WAIT)
         logging.info("Going to logout")
         locator_person = (By.CSS_SELECTOR, "#current-username")

@@ -5,6 +5,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import logging
 import sys
 import time
+import os
 
 class BasePage(object):
     """Base class to initialize the base page that will be called from all pages"""
@@ -14,7 +15,8 @@ class BasePage(object):
         
 class uitvoering_UI_BP_1(BasePage):
     def new_brugplanning(self, boot, eni_nummer):
-        WAIT = 30
+        WAIT = int(os.environ["web_wait"])
+        #AIT = 30
         wait = WebDriverWait(self.driver, WAIT)
         locator_tab_rechts = (By.CSS_SELECTOR,'#tabs-rechts')
         elem = wait.until(EC.presence_of_element_located(locator_tab_rechts))
@@ -41,7 +43,8 @@ class uitvoering_UI_BP_1(BasePage):
         elem.click()
         
     def sleur_en_pleur(self,boot,eni_nummer):
-        WAIT = 30
+        WAIT = int(os.environ["web_wait"])
+        #WAIT = 30
         wait = WebDriverWait(self.driver, WAIT)
         driver = self.driver
         locator_planning_window = (By.CSS_SELECTOR,'.actuele-planning#brugplanning-0')
@@ -62,7 +65,8 @@ class uitvoering_UI_BP_1(BasePage):
                 break
             
     def check(self,boot_naam,eni_nummer):
-        WAIT = 30
+        WAIT = int(os.environ["web_wait"])
+        #WAIT = 30
         wait = WebDriverWait(self.driver, WAIT)
         driver = self.driver
         
@@ -150,7 +154,8 @@ class uitvoering_UI_BP_1(BasePage):
             sys.exit(1)
         
     def uitvoeren_brugplanning(self,boot_naam,eni_nummer):
-        WAIT = 30
+        WAIT = int(os.environ["web_wait"])
+        #WAIT = 30
         wait = WebDriverWait(self.driver, WAIT)
         locator_brugplanning = (By.CSS_SELECTOR,".btn-openen")
         elem = wait.until(EC.element_to_be_clickable(locator_brugplanning))

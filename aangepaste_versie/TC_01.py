@@ -25,6 +25,9 @@ class Log(object):
         self.log.write(msg)  
 
 
+
+
+
 class TestCase_01(unittest.TestCase):
     
 
@@ -164,6 +167,7 @@ if __name__ == '__main__':
     
     os.environ["log_path"] = path_to_log
     os.environ["ini_path"] = path_to_ini
+    os.environ["web_wait"] = '60'
     
     #sys.stderr = Log()
     logfile = datetime.datetime.today().strftime('%Y%m%d%H%M%S%f') +'.log'

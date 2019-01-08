@@ -5,6 +5,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 import logging
 import re
 import time
+import os
 
 
 class BasePage(object):
@@ -15,7 +16,8 @@ class BasePage(object):
         
 class IVSPage(BasePage):
     def navigate(self, brug):
-        WAIT = 30
+        WAIT = int(os.environ["web_wait"])
+        #WAIT = 30
         wait = WebDriverWait(self.driver, WAIT)
         logging.info("Going to "+brug)
         locator_login = (By.LINK_TEXT, brug)
@@ -24,7 +26,8 @@ class IVSPage(BasePage):
         elem.click()
         
     def voorbereiding_brugplanning(self, boot, eni_nummer, vaarrichting):
-        WAIT = 30
+        WAIT = int(os.environ["web_wait"])
+        #WAIT = 30
         wait = WebDriverWait(self.driver, WAIT)
         driver = self.driver
         #Brugplanningen opschonen
