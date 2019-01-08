@@ -159,7 +159,7 @@ if __name__ == '__main__':
         path_to_log = "./logs/"
         path_to_ini = "./ini/"
     elif platform.system()=="Linux":
-        path_to_log = "../logs/"
+        path_to_log = "/var/logs/"
         path_to_ini = "/var/ini/"
     
     os.environ["log_path"] = path_to_log
