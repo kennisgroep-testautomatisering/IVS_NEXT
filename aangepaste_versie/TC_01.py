@@ -73,7 +73,7 @@ class TestCase_01(unittest.TestCase):
         driver.get(link)
         self.addCleanup(self.driver.quit)
         self.addCleanup(self.screen_shot)
-        self.driver.implicitly_wait(5)
+        self.driver.implicitly_wait(2)
     
     def voorbereiding_start(self):
         '''

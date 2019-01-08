@@ -4,6 +4,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 import logging
 import re
+import time
 
 
 class BasePage(object):
@@ -26,7 +27,13 @@ class IVSPage(BasePage):
         wait = WebDriverWait(self.driver, WAIT)
         driver = self.driver
         #Brugplanningen opschonen
+        
+        
         planningen = driver.find_elements_by_css_selector('.delete-brugplanning-btn')
+        if (len(planningen)>0):
+            locator_prullenbak = (By.CSS_SELECTOR,'.delete-brugplanning-btn')
+            wait.until(EC.element_to_be_clickable(locator_prullenbak))
+            
         for planning in planningen:
             planning.click()
             bevestig = driver.find_element_by_css_selector("#btn-do-delete")
@@ -46,7 +53,7 @@ class IVSPage(BasePage):
         locator_sub_venster = (By.CSS_SELECTOR, ".vaartuig-search-result-container")
         venster = wait.until(EC.presence_of_element_located(locator_sub_venster))
         
-        boten = []
+        #boten = []
         boten = venster.find_elements_by_css_selector('.vaartuig-identifier')
         for boot in boten:
             if (boot.text == eni_nummer):
@@ -98,8 +105,9 @@ class IVSPage(BasePage):
             elem = wait.until(EC.presence_of_element_located(locator_opvarend)) 
             elem.click()
             
-        locator_publiceren = (By.CSS_SELECTOR,'.justify-content-between')
+        locator_publiceren = (By.CSS_SELECTOR,'.btn-success')
         elem = wait.until(EC.presence_of_element_located(locator_publiceren))
+        #time.sleep(1)
         elem.click()
         locator_kruisje = (By.CSS_SELECTOR,".btn-delete[container='body']")
         elem = wait.until(EC.presence_of_element_located(locator_kruisje))
