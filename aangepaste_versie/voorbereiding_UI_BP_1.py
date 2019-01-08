@@ -39,7 +39,8 @@ class IVSPage(BasePage):
             bevestig = driver.find_element_by_css_selector("#btn-do-delete")
             bevestig.click()
         
-        toevoegen = driver.find_element_by_css_selector(".add-button .fa-plus")
+        locator_plusje = (By.CSS_SELECTOR,".add-button .fa-plus")
+        toevoegen = wait.until(EC.element_to_be_clickable(locator_plusje))
         toevoegen.click()
         
         logging.info("Zoek boot "+boot)
